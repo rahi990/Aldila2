@@ -1,0 +1,24 @@
+{
+    "name": "Aldila App",
+    "short_name": "Aldila",
+    "description": "Aldila - Your trusted platform",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#84cc16",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "/assets/applogo.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/assets/applogo.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
