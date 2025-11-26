@@ -28,7 +28,8 @@ interface Plan {
   totalRevenue: number;
   price: number;
   validity: number;
-  maxPurchase: number;
+  status: "active" | "upcoming" | "disabled";
+  maxPurchase?: number;
   isActive: boolean;
 }
 
@@ -65,10 +66,10 @@ export default function Home() {
       setDataLoading(false);
     });
 
-    // Setup real-time listener for active plans
+    // Setup real-time listener for active and upcoming plans (exclude disabled)
     const plansQuery = query(
       collection(db, "plans"),
-      where("isActive", "==", true)
+      where("status", "in", ["active", "upcoming"])
     );
 
     const unsubscribePlans = onSnapshot(plansQuery, (snapshot) => {
@@ -189,6 +190,7 @@ export default function Home() {
               price={plan.price}
               validity={plan.validity}
               maxPurchase={plan.maxPurchase}
+              status={plan.status}
             />
           ))
         ) : (

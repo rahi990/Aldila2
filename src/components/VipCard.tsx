@@ -16,9 +16,10 @@ interface VipCardProps {
     price: number;
     validity: number;
     maxPurchase?: number; // Optional now, will be ignored
+    status: "active" | "upcoming" | "disabled";
 }
 
-export function VipCard({ level, dailyIncome, totalRevenue, price, validity, maxPurchase }: VipCardProps) {
+export function VipCard({ level, dailyIncome, totalRevenue, price, validity, maxPurchase, status }: VipCardProps) {
     const [showConfirm, setShowConfirm] = useState(false);
     const [loading, setLoading] = useState(false);
     const { showToast } = useToast();
@@ -159,7 +160,16 @@ export function VipCard({ level, dailyIncome, totalRevenue, price, validity, max
 
     return (
         <>
-            <div className="bg-card rounded-xl border border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-[0_0_20px_rgba(132,204,22,0.2)] hover:border-primary/50 hover:-translate-y-1">
+            <div className="bg-card rounded-xl border border-border overflow-hidden shadow-sm transition-all duration-300 hover:shadow-[0_0_20px_rgba(132,204,22,0.2)] hover:border-primary/50 hover:-translate-y-1 relative">
+                {/* Status Badge for Upcoming Plans */}
+                {status === "upcoming" && (
+                    <div className="absolute top-2 right-2 z-10">
+                        <span className="bg-yellow-500/20 text-yellow-400 text-xs font-bold px-3 py-1 rounded-full border border-yellow-500/30">
+                            আসছে শীঘ্রই
+                        </span>
+                    </div>
+                )}
+
                 <div className="p-4 flex items-center gap-4 border-b border-border/50">
                     <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center p-1">
                         <Image
@@ -188,7 +198,18 @@ export function VipCard({ level, dailyIncome, totalRevenue, price, validity, max
 
                 <div className="p-4 bg-muted/20 flex items-center justify-between">
                     <div className="text-primary font-bold text-lg">৳{price.toLocaleString()}</div>
-                    {isAlreadyActive ? (
+                    {status === "upcoming" ? (
+                        <div className="flex flex-col items-end">
+                            <span className="text-xs text-yellow-400 mb-1">শীঘ্রই আসছে</span>
+                            <button
+                                disabled
+                                className="bg-muted/30 text-muted-foreground px-6 py-2 rounded-full font-bold text-sm cursor-not-allowed"
+                                title="এই প্ল্যানটি এখনও উপলব্ধ নয়"
+                            >
+                                আসছে শীঘ্রই
+                            </button>
+                        </div>
+                    ) : isAlreadyActive ? (
                         <div className="flex flex-col items-end">
                             <span className="text-xs text-muted-foreground mb-1">ইতিমধ্যে সক্রিয়</span>
                             <button
