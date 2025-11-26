@@ -13,6 +13,7 @@ interface Plan {
     price: number;
     validity: number;
     isActive: boolean;
+    status: "active" | "upcoming" | "disabled";
     createdAt: string;
 }
 
@@ -28,6 +29,7 @@ export default function PlansManagement() {
         price: 0,
         validity: 300,
         isActive: true,
+        status: "active" as "active" | "upcoming" | "disabled",
     });
 
     useEffect(() => {
@@ -62,7 +64,7 @@ export default function PlansManagement() {
             }
             setShowModal(false);
             setEditingPlan(null);
-            setFormData({ level: 1, dailyIncome: 0, totalRevenue: 0, price: 0, validity: 300, isActive: true });
+            setFormData({ level: 1, dailyIncome: 0, totalRevenue: 0, price: 0, validity: 300, isActive: true, status: "active" });
             fetchPlans();
         } catch (error) {
             console.error("Error saving plan:", error);
@@ -78,6 +80,7 @@ export default function PlansManagement() {
             price: plan.price,
             validity: plan.validity,
             isActive: plan.isActive,
+            status: plan.status || "active",
         });
         setShowModal(true);
     };
@@ -123,7 +126,7 @@ export default function PlansManagement() {
                 <button
                     onClick={() => {
                         setEditingPlan(null);
-                        setFormData({ level: 1, dailyIncome: 0, totalRevenue: 0, price: 0, validity: 300, isActive: true });
+                        setFormData({ level: 1, dailyIncome: 0, totalRevenue: 0, price: 0, validity: 300, isActive: true, status: "active" });
                         setShowModal(true);
                     }}
                     className="bg-primary text-primary-foreground px-4 py-2 rounded-lg flex items-center gap-2 hover:opacity-90 transition-opacity"
@@ -280,6 +283,23 @@ export default function PlansManagement() {
                                         min="1"
                                     />
                                 </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Status</label>
+                                <select
+                                    value={formData.status}
+                                    onChange={(e) => setFormData({ ...formData, status: e.target.value as "active" | "upcoming" | "disabled" })}
+                                    className="w-full bg-background border border-border rounded-lg px-4 py-2"
+                                    required
+                                >
+                                    <option value="active">Active (Visible & Purchasable)</option>
+                                    <option value="upcoming">Upcoming (Visible but Not Purchasable)</option>
+                                    <option value="disabled">Disabled (Hidden)</option>
+                                </select>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                    Active: Users can see and buy | Upcoming: Users can only see | Disabled: Completely hidden
+                                </p>
                             </div>
 
                             <div className="flex items-center gap-2">
